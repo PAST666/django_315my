@@ -1,4 +1,5 @@
 venv/
-*.pyc
-__pycache__/
+blog/__pucache__/
 db.sqlite3
+__pycache__*
+.vscode/launch.json
