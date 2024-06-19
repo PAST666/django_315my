@@ -1,9 +1,9 @@
 from django.contrib import admin
-from django.urls import path, include
+from django.urls import path
 from python_blog import views
 
 urlpatterns = [
-    path('', admin.site.urls),
-    path('category/', views.category),
+    path("", views.index),
+    path("category/", views.category),
     path("category/<int:category_id>/", views.category_detail),
 ]

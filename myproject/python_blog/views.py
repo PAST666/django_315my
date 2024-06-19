@@ -1,21 +1,27 @@
 from urllib import request
 from django.shortcuts import render
 
-from django.http import HttpResponse
+from django.http import Http404, HttpResponse
 
-CATEGORIES = {1: "Python", 2: "Django", 3: "Flask"}
+CATEGORIES = {
+    1: "Чилл территории Python",
+    2: "Django, сложно, но можно!",
+    3: "Flask, бегите, глупцы!",
+}
 
 
 def category_detail(request, category_id):
     category_id = int(category_id)
     category_str = CATEGORIES.get(category_id)
-    return HttpResponse(f"<h1>{category_str}</h1><a href='/category/'>Назад</a>")
+    if not category_str:
+        raise Http404(f"Категория с id={category_id} не найдена")
+    return HttpResponse(f"<h1>{category_str}</h1><a href='/blog/category/'>Назад</a>")
 
 
 def index(request):
     return HttpResponse(
         """<h1>Мой блог!</h1>
-        <a href="/category/">Категории</a>
+        <a href="/blog/category/">Категории</a>
         """
     )
 
