@@ -1,33 +1,5 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>{{ title }}</title>
-  </head>
-  <body>
-    <h1> {{ text}} </h1>
-    <p>{{ title }}</p>
-    <p> Попробуем сделать {{ stack_list}}</p>
-    <ul>
-    {% for item in stack_list %}
-    <li> {{item}} </li>
-    {% endfor %}
-    </ul>
-    <ul>
-        <h1> Разработчики</h2>
-        {% for developer in developers%}
-        <li>
-            <h3> {{ developer.name}}</h3>
-            <p>Возраст: {{developer.age}}</p>
-            <p>Стек технологий:</p>
-            <ul>
-                {% for stack in developer.stack %}
-                <li> {{ stack }} </li>
-                {% endfor %}
-            </ul>   
-        </li>
-        {% endfor %}
-    </ul>
-  </body>
-</html>
+{% extends "base.html" %} {% block title %}О нас {% endblock %} {% block content
+%}
+<h1>Добро пожаловать на страницу О нас</h1>
+<p>Здесь ничего нет, но что-то будет!</p>
+{% endblock %}

@@ -1,7 +1,7 @@
-from urllib import request
+from calendar import c
 from django.shortcuts import render
-
-from django.http import Http404, HttpResponse
+from django.http import Http404
+from django.template import context
 
 CATEGORIES = {
     1: "Чилл территории Python",
@@ -9,6 +9,77 @@ CATEGORIES = {
     3: "Flask, бегите, глупцы!",
 }
 
+menu = [
+    {
+        "name":"Главная",
+        "url":"/",
+        "alias":"main",
+    },
+        {
+        "name":"Блог",
+        "url":"blog",
+        "alias":"blog",
+    },
+        {
+        "name":"О проекте",
+        "url":"about",
+        "alias":"about",
+    }
+]
+
+posts = [
+    {
+        "category": "Python",
+        "tags": ["основы", "синтаксис", "советы"],
+        "slug": "introduction-to-python",
+        "title": "Введение в Python",
+        "text": ("Python — это высокоуровневый язык программирования с простым синтаксисом и мощными библиотеками. "
+                 "Он широко используется для разработки веб-приложений, анализа данных, научных исследований и автоматизации задач. "
+                 "Благодаря своей универсальности и поддержке сообщества, Python стал одним из самых популярных языков программирования в мире. "
+                 "Кроме того, наличие множества онлайн-курсов и документации делает его отличным выбором для начинающих. "
+                 "В этой статье мы рассмотрим основные концепции и примеры использования Python."),
+        "author": "Иван Петров",
+        "published_date": "2024-06-25",
+        "comments": [
+            {"author": "Алексей Смирнов", "text": "Отличная статья для новичков!", "date": "2024-06-26"},
+            {"author": "Мария Иванова", "text": "Python действительно лучший выбор для начинающих.", "date": "2024-06-27"}
+        ]
+    },
+    {
+        "category": "Django",
+        "tags": ["веб-разработка", "фреймворк", "приложения"],
+        "slug": "getting-started-with-django",
+        "title": "Начало работы с Django",
+        "text": ("Django — это мощный веб-фреймворк на Python, который позволяет быстро создавать сложные веб-приложения. "
+                 "Он включает в себя множество встроенных функций, таких как аутентификация, управление базами данных и административный интерфейс. "
+                 "Django следит за принципом DRY (Don't Repeat Yourself), что помогает разработчикам писать чистый и эффективный код. "
+                 "Этот фреймворк подходит как для небольших проектов, так и для крупных корпоративных приложений. "
+                 "В данной статье мы рассмотрим основные этапы создания проекта на Django и его настройки."),
+        "author": "Ольга Кузнецова",
+        "published_date": "2024-06-24",
+        "comments": [
+            {"author": "Сергей Васильев", "text": "Django - отличное решение для стартапов.", "date": "2024-06-25"},
+            {"author": "Наталья Соколова", "text": "Статья помогла мне разобраться с настройками.", "date": "2024-06-26"}
+        ]
+    },
+    {
+        "category": "Базы данных",
+        "tags": ["SQL", "sqlite", "управление"],
+        "slug": "database-management-with-sqlite",
+        "title": "Управление базами данных с SQLite",
+        "text": ("SQLite — это легковесная, но мощная система управления базами данных, которая не требует установки сервера. "
+                 "Она идеально подходит для встраиваемых приложений и прототипов, где необходима полноценная реляционная база данных. "
+                 "SQLite хранит всю базу данных в одном файле, что упрощает ее перенос и резервное копирование. "
+                 "Ее простота и надежность делают SQLite популярным выбором среди разработчиков мобильных и настольных приложений. "
+                 "В этой статье мы рассмотрим основные команды SQL и примеры их использования в SQLite."),
+        "author": "Анна Сергеева",
+        "published_date": "2024-06-23",
+        "comments": [
+            {"author": "Дмитрий Козлов", "text": "Использую SQLite для небольших проектов, очень удобно!", "date": "2024-06-24"},
+            {"author": "Елена Миронова", "text": "Отличное объяснение основных команд SQL.", "date": "2024-06-25"}
+        ]
+    }
+]
 
 def category_detail(request, category_id):
     category_id = int(category_id)
@@ -20,43 +91,34 @@ def category_detail(request, category_id):
 
 
 def main(request):
-    return render(request, "main.html")
+    context={
+        "menu":menu,
+        "page_alias": "main",
+        "title": "Главная страница"
+    }
 
-
-class Developer:
-    def __init__(self, name, stack):
-        self.name = name
-        self.stack = stack
-
-    def __str__(self):
-        return f"{self.name} - {self.stack}"
-
-    def get_rus_info(self):
-        return f"Разработчик {self.name} - {self.stack}"
-
-
-about_data = {
-    "title": "О нас",
-    "text": "Мы - команда разработчиков, которая создает сайты на Django и Flask.",
-    "stack_list": ["Python", "Django", "Flask"],
-    "developers": [
-        {"name": "Иван", "age": 25, "stack": ["Python", "Django"]},
-        {"name": "Анна", "age": 23, "stack": ["Python", "Flask"]},
-        {"name": "Петр", "age": 30, "stack": ["JS", "React", "Vue"]},
-    ],
-}
-
-
-def category(request):
-    return HttpResponse(
-        """<ul><li>Python</li><li>Django</li><li>Flask</li></ul>
-        <a href="/">На главную</a>
-        """
-    )
-
+    return render(request, "main.html", context)
 
 def about(request):
-    return render(request, "python_blog/about.html", about_data)
+    context={
+        "menu":menu,
+        "page_alias": "about",
+        "title": "О нас"
+    }
+def blog(request):
+    context = {
+        "menu": menu,
+        "page_alias": "blog",
+        "title": "Блог",
+        "posts": posts
+    }
+    return render(request, 'python_blog/blog.html', context)
+
+def category(request):
+    context = {"categories": CATEGORIES}
+    return render(request, 'python_blog/categories_list.html', context)
+
+
 
 
 # Create your views here.
