@@ -3,4 +3,13 @@
 {% block content %}
     <h1>Это Блог!</h1>
     <p>Здесь много интересного!</p>
+    <form class="d-flex">
+    <input class="form-control me-2" type="search" placeholder="Поиск" aria-label="Search">
+    <button class="btn btn-outline-success" type="submit">Поиск</button>
+</form>
+{% comment %} Отрисовка постов циклом
+Пост представляет post_preview.html {% endcomment %}
+{% for post in posts %}
+    {% include "includes/post_preview.html" %}
+{% endfor %}
 {% endblock %}
