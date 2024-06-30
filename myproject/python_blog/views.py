@@ -105,6 +105,8 @@ def about(request):
         "page_alias": "about",
         "title": "О нас"
     }
+    return render(request, 'python_blog/about.html', context)
+
 def blog(request):
     context = {
         "menu": menu,
