@@ -1,8 +1,7 @@
 from django.urls import path
-from python_blog import views
+from .views import blog, post_detail
 
 urlpatterns = [
-    path("category/", views.category, name="categories"),
-    path("category/<int:category_id>/", views.category_detail, name="category"),
-    path("", views.blog, name="blog"),
+    path("", blog, name="blog"),
+    path("<slug:slug>/", post_detail, name="post_detail")
 ]

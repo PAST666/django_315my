@@ -120,6 +120,18 @@ def category(request):
     context = {"categories": CATEGORIES}
     return render(request, 'python_blog/categories_list.html', context)
 
+def post_detail(request, slug):
+    post = next((p for p in posts if p["slug"] == slug), None)
+    if post is None:
+        return HttpResponse("Статья не найдена", status=404)
+
+    context = {
+        "menu": menu,
+        "post": post,
+        "page_alias": "blog_catalog",
+    }
+    return render(request, "post_preview.html", context)
+
 
 
 
