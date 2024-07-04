@@ -9,20 +9,19 @@ CATEGORIES = {
     3: "Flask, бегите, глупцы!",
 }
 
+USERS_COUNT = 10
+
 menu = [
     {
         "name":"Главная",
-        "url":"/",
         "alias":"main",
     },
         {
         "name":"Блог",
-        "url":"blog",
         "alias":"blog",
     },
         {
         "name":"О проекте",
-        "url":"about",
         "alias":"about",
     }
 ]
@@ -101,6 +100,7 @@ def main(request):
 
 def about(request):
     context={
+        "users_count": USERS_COUNT,
         "menu":menu,
         "page_alias": "about",
         "title": "О нас"
