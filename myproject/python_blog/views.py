@@ -93,7 +93,8 @@ def main(request):
     context={
         "menu":menu,
         "page_alias": "main",
-        "title": "Главная страница"
+        "users_count": USERS_COUNT,
+        "posts": posts,
     }
 
     return render(request, "main.html", context)
@@ -103,22 +104,74 @@ def about(request):
         "users_count": USERS_COUNT,
         "menu":menu,
         "page_alias": "about",
-        "title": "О нас"
     }
     return render(request, 'python_blog/about.html', context)
 
 def blog(request):
-    context = {
-        "menu": menu,
-        "page_alias": "blog",
-        "title": "Блог",
-        "posts": posts
-    }
-    return render(request, 'python_blog/blog.html', context)
+    """
+    Вьюшка для страницы "Блог" с каталогом постов.
+    Обрабатываем поисковую форму, которая обрабатывается методом GET
+    И пробуем получить от туда ключи:
+        search
+        searchInTitle
+        searchInText
+        searchInTags
+    """
+    
+    if request.method == "GET":
+        search = request.GET.get("search")
+        search_in_title = request.GET.get("searchInTitle")
+        search_in_text = request.GET.get("searchInText")
+        search_in_tags = request.GET.get("searchInTags")
+        posts_filtered = []
+        
+        if search:
+            
+            for post in posts:
+                
+                # Если чекбоксы выключены, ищем только по тексту
+                # Если включен title, ищем по названию
+                # Если включен text, ищем по тексту
+                # Если включен tags, ищем по тегам
+                
+                # Поиск по умолчанию
+                if not search_in_title and not search_in_text and not search_in_tags:
+                    if search.lower() in post["text"].lower():
+                        posts_filtered.append(post)
 
-def category(request):
-    context = {"categories": CATEGORIES}
-    return render(request, 'python_blog/categories_list.html', context)
+                # Поиск по названию
+                if search_in_title:
+                    if search.lower() in post["title"].lower():
+                        posts_filtered.append(post)
+
+                # Поиск по тексту
+                if search_in_text:
+                    if search.lower() in post["text"].lower():
+                        posts_filtered.append(post)
+                
+                # Поиск по тегам
+                if search_in_tags:
+                    for tag in post["tags"]:
+                        if search.lower() in tag.lower():
+                            posts_filtered.append(post)
+
+                
+    
+        context = {
+            "menu": menu,
+            "posts": posts_filtered if posts_filtered else posts,
+            "page_alias": "blog",
+        }
+        return render(request, "python_blog/blog.html", context)
+    
+# def blog(request):
+#     context = {
+#         "menu": menu,
+#         "page_alias": "blog",
+#         "title": "Блог",
+#         "posts": posts
+#     }
+#     return render(request, 'python_blog/blog.html', context)
 
 def post_detail(request, slug):
     post = next((p for p in posts if p["slug"] == slug), None)
@@ -128,9 +181,9 @@ def post_detail(request, slug):
     context = {
         "menu": menu,
         "post": post,
-        "page_alias": "blog_catalog",
+        "page_alias": "blog",
     }
-    return render(request, "post_preview.html", context)
+    return render(request, "includes/post_preview.html", context)
 
 
 
