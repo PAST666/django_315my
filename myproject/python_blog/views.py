@@ -183,7 +183,7 @@ def post_detail(request, slug):
         "post": post,
         "page_alias": "blog",
     }
-    return render(request, "includes/post_preview.html", context)
+    return render(request, "python_blog/post_detail.html", context)
 
 
 
