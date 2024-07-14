@@ -33,7 +33,7 @@ posts = [
         "slug": "introduction-to-python",
         "title": "Введение в Python",
         "text": ("""
-Python — это высокоуровневый язык программирования общего назначения, известный своей простотой и читаемостью кода. Он широко используется в веб-разработке, научных вычислениях, обработке данных, искусственном интеллекте и многих других областях.
+**Python** — это высокоуровневый язык программирования общего назначения, известный своей простотой и читаемостью кода. Он широко используется в веб-разработке, научных вычислениях, обработке данных, искусственном интеллекте и многих других областях.
 
 ### Основные концепции
 
@@ -241,28 +241,19 @@ def blog(request):
         if search:
             
             for post in posts:
-                
-                # Если чекбоксы выключены, ищем только по тексту
-                # Если включен title, ищем по названию
-                # Если включен text, ищем по тексту
-                # Если включен tags, ищем по тегам
-                
-                # Поиск по умолчанию
+
                 if not search_in_title and not search_in_text and not search_in_tags:
                     if search.lower() in post["text"].lower():
                         posts_filtered.append(post)
 
-                # Поиск по названию
                 if search_in_title:
                     if search.lower() in post["title"].lower():
                         posts_filtered.append(post)
 
-                # Поиск по тексту
                 if search_in_text:
                     if search.lower() in post["text"].lower():
                         posts_filtered.append(post)
                 
-                # Поиск по тегам
                 if search_in_tags:
                     for tag in post["tags"]:
                         if search.lower() in tag.lower():
@@ -276,15 +267,6 @@ def blog(request):
             "page_alias": "blog",
         }
         return render(request, "python_blog/blog.html", context)
-    
-# def blog(request):
-#     context = {
-#         "menu": menu,
-#         "page_alias": "blog",
-#         "title": "Блог",
-#         "posts": posts
-#     }
-#     return render(request, 'python_blog/blog.html', context)
 
 def post_detail(request, slug):
     post = next((p for p in posts if p["slug"] == slug), None)
@@ -299,6 +281,3 @@ def post_detail(request, slug):
     return render(request, "python_blog/post_detail.html", context)
 
 
-
-
-# Create your views here.
