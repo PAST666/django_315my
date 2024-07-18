@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     # пользовательские приложения внизу!
+    "django_extensions",
     "python_blog",
 ]
 
