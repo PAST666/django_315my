@@ -22,7 +22,7 @@ class Post(models.Model):
         Переопределение метода save для автоматической генерации slug
         """
         if not self.slug or self.slug == "":
-            self.slug = slugify(unidecode(self.title))
+            self.slug = slugify(unidecode(self.slug))
         super().save(*args, **kwargs)
 
     def __str__(self):
