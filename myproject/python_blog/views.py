@@ -1,7 +1,15 @@
+from calendar import c
 from django.shortcuts import render
-from django.http import HttpRequest
+from django.http import Http404
+from django.template import context
 from .models import Post
 from django.shortcuts import get_object_or_404
+
+CATEGORIES = {
+    1: "Чилл территории Python",
+    2: "Django, сложно, но можно!",
+    3: "Flask, бегите, глупцы!",
+}
 
 USERS_COUNT = 10
 
@@ -20,6 +28,28 @@ menu = [
     }
 ]
 
+
+
+def category_detail(request, category_id):
+    category_id = int(category_id)
+    category_str = CATEGORIES.get(category_id)
+    context = {"message": category_str}
+    if not category_str:
+        raise Http404(f"Категория с id={category_id} не найдена")
+    return render(request, "python_blog/test_template.html", context=context)
+
+
+def main(request):
+    posts = Post.objects.all()
+    context={
+        "menu":menu,
+        "page_alias": "main",
+        "users_count": USERS_COUNT,
+        "posts": posts,
+    }
+
+    return render(request, "main.html", context)
+
 def about(request):
     context={
         "users_count": USERS_COUNT,
@@ -29,8 +59,21 @@ def about(request):
     return render(request, 'python_blog/about.html', context)
 
 def blog(request):
+    """
+    Вьюшка для страницы "Блог" с каталогом постов.
+    Обрабатываем поисковую форму, которая обрабатывается методом GET
+    И пробуем получить от туда ключи:
+        search
+        searchInTitle
+        searchInText
+        searchInTags
+    """
+    
     if request.method == "GET":
         posts = Post.objects.all()
+
+                
+    
         context = {
             "menu": menu,
             "posts": posts,
@@ -38,21 +81,14 @@ def blog(request):
         }
         return render(request, "python_blog/blog.html", context)
 
-def main(request):
-    
-    context={
-        "menu":menu,
-        "page_alias": "main",
-        "users_count": USERS_COUNT,
-        # "posts": posts,
-    }
-    return render(request, "main.html", context)
-
 def post_detail(request, slug):
-    get_object_or_404(Post, slug=slug)
+    post: Post = get_object_or_404(Post, slug=slug)
+
     context = {
         "menu": menu,
         "post": post,
         "page_alias": "blog",
     }
     return render(request, "python_blog/post_detail.html", context)
+
+
