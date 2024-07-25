@@ -1,17 +1,27 @@
-html, body {
-  height: 100%;
-  margin: 0;
-  display: flex;
-  flex-direction: column;
+body {
+  font-size: 1.25rem; /* Размер шрифта */
 }
 
-main {
-  flex: 1;
+a.btn {
+  font-size: 1.1rem; /* Размер шрифта для кнопок */
 }
 
-footer {
-  background-color: #151617;
-  color: white;
-  text-align: center;
-  padding: 1rem;
+/* Стили тегов */
+span.tag {
+  background-color: #55606b; /* Темный цвет фона */
+  color: #fff; /* Белый цвет текста */
+  font-family: monospace;
 }
+
+/* Стили для тегов при наведении плавно окрашиваются в темный цвет фона */
+span.tag:hover {
+  background-color: #343a40; /* Темный цвет фона */
+  transition: background-color 1.9s; /* Плавное изменение цвета фона */
+}
+
+/* Размер иконок и цвет */
+span > i.bi {
+  font-size: 1.5rem;
+  color: #343a40;
+}
+

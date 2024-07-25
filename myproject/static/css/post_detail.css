@@ -1,3 +1,33 @@
+/* Для блока pre делаем тень */
 pre {
     box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+}
+
+  /* Стили меню */
+#toc {
+    position: sticky;
+    top: 20px;
+    padding: 10px;
+    background-color: #f8f9fa;
+    border: 1px solid #dee2e6;
+    border-radius: 0.25rem;
+}
+
+#toc h5 {
+    margin-bottom: 10px;
+}
+
+#toc a {
+    color: #343a40;
+}
+
+#toc a:hover {
+    text-decoration: underline;
+    background-color: #f1f1f1;
+}
+
+  /* Последняя кликнутая */
+#toc a:focus {
+    background-color: #84898f;
+    border-radius: 0.25rem;
 }

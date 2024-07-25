@@ -28,3 +28,10 @@ input[type="checkbox"]:focus {
     box-shadow: none;
     border-color: #495057;
 }
+
+input.form-control {
+    /* больше высота */
+    height: 3rem;
+    /* больше размер шрифта */
+    font-size: 1.25rem;
+}

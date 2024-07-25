@@ -1,6 +1,6 @@
-from calendar import c
 from django.shortcuts import render
 from django.http import Http404
+from django.http import HttpRequest
 from django.template import context
 from .models import Post
 from django.shortcuts import get_object_or_404
@@ -90,5 +90,28 @@ def post_detail(request, slug):
         "page_alias": "blog",
     }
     return render(request, "python_blog/post_detail.html", context)
+
+def tag_detail(request: HttpRequest, slug: str):
+    """
+    Функция - представление для страницы тега
+    Принимает объект запроса HttpRequest и slug тега
+    Отображает список статей с соответствующим slug
+
+    Как это было бы на SQL (многие ко многим)
+
+    SELECT * FROM post WHERE id IN (
+        SELECT post_id FROM post_tags WHERE tag_id = (
+            SELECT id FROM tag WHERE slug = slug
+        )
+    )
+    """
+    posts = Post.objects.filter(tags__slug=slug)
+    context = {
+        "menu": menu,
+        "posts": posts,
+        "page_alias": "blog",
+    }
+
+    return render(request, "python_blog/blog.html", context)
 
 
