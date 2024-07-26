@@ -91,6 +91,15 @@ def post_detail(request, slug):
     }
     return render(request, "python_blog/post_detail.html", context)
 
+def category_detail(request: HttpRequest, slug: str):
+    posts = posts = Post.objects.filter(category__slug=slug)
+    context = {
+        "menu": menu,
+        "posts": posts,
+        "page_alias": "blog_catalog",
+    }
+    return render(request, "python_blog/blog.html", context)
+
 def tag_detail(request: HttpRequest, slug: str):
     """
     Функция - представление для страницы тега
