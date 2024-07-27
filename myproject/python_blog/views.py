@@ -2,6 +2,7 @@ from django.shortcuts import render
 from django.http import Http404
 from django.http import HttpRequest
 from django.template import context
+from django.test import tag
 from .models import Post
 from django.shortcuts import get_object_or_404
 
@@ -108,6 +109,7 @@ def tag_detail(request: HttpRequest, slug: str):
         "menu": menu,
         "posts": posts,
         "page_alias": "blog",
+        "tag": tag
     }
 
     return render(request, "python_blog/blog.html", context)
