@@ -28,17 +28,6 @@ menu = [
     }
 ]
 
-
-
-def category_detail(request, category_id):
-    category_id = int(category_id)
-    category_str = CATEGORIES.get(category_id)
-    context = {"message": category_str}
-    if not category_str:
-        raise Http404(f"Категория с id={category_id} не найдена")
-    return render(request, "python_blog/test_template.html", context=context)
-
-
 def main(request):
     posts = Post.objects.all()
     context={
