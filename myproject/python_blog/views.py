@@ -91,19 +91,6 @@ def category_detail(request: HttpRequest, slug: str):
     return render(request, "python_blog/blog.html", context)
 
 def tag_detail(request: HttpRequest, slug: str):
-    """
-    Функция - представление для страницы тега
-    Принимает объект запроса HttpRequest и slug тега
-    Отображает список статей с соответствующим slug
-
-    Как это было бы на SQL (многие ко многим)
-
-    SELECT * FROM post WHERE id IN (
-        SELECT post_id FROM post_tags WHERE tag_id = (
-            SELECT id FROM tag WHERE slug = slug
-        )
-    )
-    """
     posts = Post.objects.filter(tags__slug=slug)
     context = {
         "menu": menu,
