@@ -1,12 +1,10 @@
-from turtle import update
 from django.shortcuts import render
-from django.http import Http404
 from django.http import HttpRequest
-from django.template import context
 from django.test import tag
 from .models import Post
 from django.shortcuts import get_object_or_404
-from django.db.models import F
+from django.db.models import F, Q
+
 
 CATEGORIES = {
     1: "Чилл территории Python",
@@ -51,18 +49,25 @@ def about(request):
     return render(request, 'python_blog/about.html', context)
 
 def blog(request):
-    """
-    Вьюшка для страницы "Блог" с каталогом постов.
-    Обрабатываем поисковую форму, которая обрабатывается методом GET
-    И пробуем получить от туда ключи:
-        search
-        searchInTitle
-        searchInText
-        searchInTags
-    """
     
     if request.method == "GET":
-        posts = Post.objects.all()
+        posts = Post.objects.prefetch_related("tags","category").all()
+        search = request.GET.get("search")
+        if search:
+            search_in_title = request.GET.get("searchInTitle")
+            search_in_text = request.GET.get("searchInText")
+            search_in_tags = request.GET.get("searchInTags")
+
+            query = Q()
+            if search_in_title:
+                query|=Q(title__icontains=search)
+            if search_in_text:
+                query|=Q(text__icontains=search)
+            if search_in_tags:
+                query|=Q(tags__icontains=search)
+            if not search_in_title and not search_in_text and not search_in_tags:
+                query=Q(text__icontains=search)
+            posts = posts.filter(query)
 
                 
     
@@ -74,7 +79,7 @@ def blog(request):
         return render(request, "python_blog/blog.html", context)
 
 def post_detail(request, slug):
-    post: Post = get_object_or_404(Post, slug=slug)
+    post =Post.objects.prefetch_related("tags","category").get(slug=slug)
     post.views = F('views') + 1
     post.save(update_fields=['views'])
 
@@ -84,7 +89,7 @@ def post_detail(request, slug):
         "page_alias": "blog",
     }
     if 'viewed_posts' not in request.session:
-    request.session['viewed_posts'] = ['osnovy-python', 'osnovy-django', 'osnovy-django-2']
+        request.session['viewed_posts'] = ['osnovy-python', 'osnovy-django', 'osnovy-django-2']
     
     
     
@@ -92,9 +97,10 @@ def post_detail(request, slug):
         post.views = F('views') + 1
         post.save(update_fields=['views'])
         request.session['viewed_posts'].append(slug)
+        request.session.modified = True
     
     # Отображаем пост
-    return render(request, 'blog/post_detail.html', context)
+    return render(request, 'python_blog/post_detail.html', context)
 
 
 def category_detail(request: HttpRequest, slug: str):
@@ -102,7 +108,7 @@ def category_detail(request: HttpRequest, slug: str):
     context = {
         "menu": menu,
         "posts": posts,
-        "page_alias": "blog_catalog",
+        "page_alias": "blog",
     }
     return render(request, "python_blog/blog.html", context)
 
@@ -114,7 +120,6 @@ def tag_detail(request: HttpRequest, slug: str):
         "page_alias": "blog",
         "tag": tag
     }
-
     return render(request, "python_blog/blog.html", context)
 
 
