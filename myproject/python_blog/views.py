@@ -5,13 +5,6 @@ from .models import Post
 from django.shortcuts import get_object_or_404
 from django.db.models import F, Q
 
-
-CATEGORIES = {
-    1: "Чилл территории Python",
-    2: "Django, сложно, но можно!",
-    3: "Flask, бегите, глупцы!",
-}
-
 USERS_COUNT = 10
 
 menu = [
@@ -51,12 +44,12 @@ def about(request):
 def blog(request):
     
     if request.method == "GET":
-        posts = Post.objects.prefetch_related("tags","category").all()
+        posts = Post.objects.prefetch_related("tags","category").all().order_by("-published_date")
         search = request.GET.get("search")
         if search:
-            search_in_title = request.GET.get("searchInTitle")
-            search_in_text = request.GET.get("searchInText")
-            search_in_tags = request.GET.get("searchInTags")
+            search_in_title = request.GET.get("search_in_title")
+            search_in_text = request.GET.get("search_in_text")
+            search_in_tags = request.GET.get("search_in_tags")
 
             query = Q()
             if search_in_title:
@@ -64,7 +57,7 @@ def blog(request):
             if search_in_text:
                 query|=Q(text__icontains=search)
             if search_in_tags:
-                query|=Q(tags__icontains=search)
+                query|=Q(tags__name__icontains=search)
             if not search_in_title and not search_in_text and not search_in_tags:
                 query=Q(text__icontains=search)
             posts = posts.filter(query)
@@ -112,8 +105,8 @@ def category_detail(request: HttpRequest, slug: str):
     }
     return render(request, "python_blog/blog.html", context)
 
-def tag_detail(request: HttpRequest, slug: str):
-    posts = Post.objects.filter(tags__slug=slug)
+def tag_list(request: HttpRequest, slug: str):
+    posts = Post.objects.prefetch_related("tags", "category").filter(tags__slug=slug)
     context = {
         "menu": menu,
         "posts": posts,
