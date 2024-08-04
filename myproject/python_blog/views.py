@@ -23,12 +23,12 @@ menu = [
 ]
 
 def main(request):
-    posts = Post.objects.all()
+    # posts = Post.objects.all()
     context={
-        "menu":menu,
+        "menu": menu,
         "page_alias": "main",
         "users_count": USERS_COUNT,
-        "posts": posts,
+        # "posts": posts,
     }
 
     return render(request, "main.html", context)
